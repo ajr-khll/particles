@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/aj/Documents/projects/particles/build",
+  "command": "/usr/bin/cc  -isystem /opt/homebrew/Cellar/raylib/5.5/include -std=gnu11 -arch arm64 -I/opt/homebrew/Cellar/raylib/5.5/include -o CMakeFiles/MyRaylibGame.dir/main.c.o -c /Users/aj/Documents/projects/particles/main.c",
+  "file": "/Users/aj/Documents/projects/particles/main.c",
+  "output": "CMakeFiles/MyRaylibGame.dir/main.c.o"
+}
+]
