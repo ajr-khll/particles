@@ -15,6 +15,12 @@ void DrawParticle(Particle *particle) {
   DrawCircle(particle->x, particle->y, particle->r, BLACK);
 }
 
+void DrawParticles(Particle *particles[NUM_PARTICLES]) {
+  for (int i = 0; i <= NUM_PARTICLES; i++) {
+    DrawParticle(particles[i]);
+  }
+}
+
 void UpdateParticle(Particle *particle) {
   particle->x += particle->vx;
   particle->y += particle->vy;
