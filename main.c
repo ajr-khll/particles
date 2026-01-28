@@ -6,7 +6,9 @@
 #define WIDTH 800
 #define HEIGHT 600
 
-#define NUM_PARTICLES 30
+#define NUM_PARTICLES 80
+#define DAMPENING_FACTOR 0.98
+#define GRAVITY 0.1
 
 typedef struct {
   float x, y, r, vx, vy;
@@ -25,6 +27,7 @@ void DrawParticles() {
 }
 
 void UpdateParticle(Particle *particle) {
+  particle->vy += GRAVITY;
   particle->x += particle->vx;
   particle->y += particle->vy;
 
@@ -94,10 +97,10 @@ void CollideAllParticles() {
       v1n = v2n;
       v2n = tmp;
 
-      a->vx = v1t * tx + v1n * nx;
-      a->vy = v1t * ty + v1n * ny;
-      b->vx = v2t * tx + v2n * nx;
-      b->vy = v2t * ty + v2n * ny;
+      a->vx = DAMPENING_FACTOR * (v1t * tx + v1n * nx);
+      a->vy = DAMPENING_FACTOR * (v1t * ty + v1n * ny);
+      b->vx = DAMPENING_FACTOR * (v2t * tx + v2n * nx);
+      b->vy = DAMPENING_FACTOR * (v2t * ty + v2n * ny);
     }
   }
 }
