@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 1920
+#define HEIGHT 1080
 
-#define NUM_PARTICLES 80
+#define NUM_PARTICLES 2000
 #define DAMPENING_FACTOR 0.98
 #define GRAVITY 0.1
 
@@ -35,12 +35,20 @@ void UpdateParticle(Particle *particle) {
   float y = particle->y;
   float r = particle->r;
   // wall collision
-  if ((x + r >= WIDTH) || (x - r <= 0)) {
+  if ((x + r > WIDTH)) {
     particle->vx = -particle->vx;
-  }
-  if ((y + r >= HEIGHT) || (y - r <= 0)) {
+    particle->x = WIDTH - r;
+  } else if ((x - r < 0)) {
+    particle->vx = -particle->vx;
+    particle->x = r;
+  };
+  if ((y + r > HEIGHT)) {
     particle->vy = -particle->vy;
-  }
+    particle->y = HEIGHT - r;
+  } else if ((y - r < 0)) {
+    particle->vy = -particle->vy;
+    particle->y = r;
+  };
 }
 
 void UpdateParticles() {
