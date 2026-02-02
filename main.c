@@ -1,5 +1,5 @@
 #include "collision.h"
-#include "raylib.h"
+#include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,7 +7,7 @@
 Particle particles[NUM_PARTICLES];
 
 void DrawParticle(Particle *particle) {
-  DrawCircle(particle->x, particle->y, particle->r, BLACK);
+  DrawCircle(particle->x, particle->y, particle->r, particle->color);
 }
 
 void DrawParticles() {
@@ -58,6 +58,9 @@ void InitParticles() {
     particles[i].y = GetRandomValue(radius, HEIGHT - radius);
     particles[i].vx = GetRandomValue(-5, 5);
     particles[i].vy = GetRandomValue(-5, 5);
+    particles[i].color =
+        (Color){GetRandomValue(50, 255), GetRandomValue(50, 255),
+                GetRandomValue(50, 255), 255};
   }
 }
 
@@ -70,7 +73,7 @@ int main(void) {
 
   while (!WindowShouldClose()) {
     BeginDrawing();
-    ClearBackground(RAYWHITE);
+    ClearBackground(BLACK);
     UpdateParticles();
     GridUpdate();
     CollideAllParticles();

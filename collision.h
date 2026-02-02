@@ -1,5 +1,5 @@
 #pragma once
-
+#include "raylib.h"
 #define WIDTH 1920
 #define HEIGHT 1080
 #define GRID_COLS 128
@@ -11,6 +11,7 @@
 
 typedef struct {
   float x, y, r, vx, vy;
+  Color color;
 } Particle;
 
 void CollideAllParticles();

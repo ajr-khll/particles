@@ -1,5 +1,4 @@
 #include "collision.h"
-#include "raylib.h"
 #include <math.h>
 #include <stdio.h>
 // first shot at grid-based collision
