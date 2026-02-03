@@ -5,6 +5,7 @@
 #include <time.h>
 
 Particle particles[NUM_PARTICLES];
+int particlesSpawned = 0;
 
 void DrawParticle(Particle *particle) {
   DrawCircle(particle->x, particle->y, particle->r, particle->color);
@@ -17,28 +18,28 @@ void DrawParticles() {
 }
 
 void UpdateParticle(Particle *particle) {
-  particle->vy += GRAVITY;
-  particle->x += particle->vx;
-  particle->y += particle->vy;
-
+  float dt = GetFrameTime();
+  particle->vy += GRAVITY * dt;
+  particle->x += particle->vx * dt;
+  particle->y += particle->vy * dt;
   float x = particle->x;
   float y = particle->y;
   float r = particle->r;
-  // wall collision
-  if ((x + r > WIDTH)) {
-    particle->vx = -particle->vx * DAMPENING_FACTOR;
+  const float REST = 0.75f;
+  if (x + r > WIDTH) {
     particle->x = WIDTH - r;
-  } else if ((x - r < 0)) {
-    particle->vx = -particle->vx * DAMPENING_FACTOR;
+    particle->vx = -particle->vx * REST;
+  } else if (x - r < 0) {
     particle->x = r;
-  };
-  if ((y + r > HEIGHT)) {
-    particle->vy = -particle->vy * DAMPENING_FACTOR;
+    particle->vx = -particle->vx * REST;
+  }
+  if (y + r > HEIGHT) {
     particle->y = HEIGHT - r;
-  } else if ((y - r < 0)) {
-    particle->vy = -particle->vy * DAMPENING_FACTOR;
+    particle->vy = -particle->vy * REST;
+  } else if (y - r < 0) {
     particle->y = r;
-  };
+    particle->vy = -particle->vy * REST;
+  }
 }
 
 void UpdateParticles() {
@@ -49,15 +50,16 @@ void UpdateParticles() {
 
 void InitParticles() {
   SetRandomSeed(time(NULL));
-  float radius;
+  float sx = WIDTH - 40.0f;
+  float sy = 20.0f;
   for (int i = 0; i < NUM_PARTICLES; i++) {
-    // radius = GetRandomValue(0, 15);
-    radius = 4;
-    particles[i].r = radius;
-    particles[i].x = GetRandomValue(radius, WIDTH - radius);
-    particles[i].y = GetRandomValue(radius, HEIGHT - radius);
-    particles[i].vx = GetRandomValue(-5, 5);
-    particles[i].vy = GetRandomValue(-5, 5);
+    particles[i].r = 4.0f;
+    particles[i].x = sx + GetRandomValue(-6, 6);
+    particles[i].y = sy + GetRandomValue(-6, 6);
+    float speed = GetRandomValue(400, 700);
+    float angle = (135.0f + GetRandomValue(-20, 20)) * DEG2RAD;
+    particles[i].vx = cosf(angle) * speed;
+    particles[i].vy = sinf(angle) * speed;
     particles[i].color =
         (Color){GetRandomValue(50, 255), GetRandomValue(50, 255),
                 GetRandomValue(50, 255), 255};
@@ -72,12 +74,21 @@ int main(void) {
   Particle particle = {300, 300, 50, 40, 40};
 
   while (!WindowShouldClose()) {
+    if (!particlesSpawned && IsKeyPressed(KEY_SPACE)) {
+      InitParticles();
+      particlesSpawned = 1;
+    }
+
     BeginDrawing();
     ClearBackground(BLACK);
-    UpdateParticles();
-    GridUpdate();
-    CollideAllParticles();
-    DrawParticles();
+
+    if (particlesSpawned) {
+      UpdateParticles();
+      GridUpdate();
+      CollideAllParticles();
+      DrawParticles();
+    }
+
     DrawFPS(5, 5);
     EndDrawing();
   }

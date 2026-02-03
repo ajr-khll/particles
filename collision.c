@@ -31,55 +31,37 @@ void GridUpdate() {
 }
 
 void CollideParticles(Particle *a, Particle *b) {
-  Vector2 c1 = {a->x, a->y};
-  Vector2 c2 = {b->x, b->y};
-
-  if (!CheckCollisionCircles(c1, a->r, c2, b->r))
-    return;
-
-  float dx = a->x - b->x;
-  float dy = a->y - b->y;
+  float dx = b->x - a->x;
+  float dy = b->y - a->y;
   float dist = sqrtf(dx * dx + dy * dy);
-  if (dist < EPS)
+  float minDist = a->r + b->r;
+  if (dist <= 0.0001f || dist >= minDist)
     return;
-
   float nx = dx / dist;
   float ny = dy / dist;
-
-  const float PERCENT = 0.8f; // usually .2-.8
-  const float SLOP = 0.01f;   // small tolerance in pixels
-
-  float overlap = (a->r + b->r) - dist;
-  if (overlap > SLOP) {
-    float correction = (overlap - SLOP);
-    a->x += nx * correction * PERCENT;
-    a->y += ny * correction * PERCENT;
-    b->x -= nx * correction * PERCENT;
-    b->y -= ny * correction * PERCENT;
-  }
-
-  float rvx = a->vx - b->vx;
-  float rvy = a->vy - b->vy;
+  float overlap = minDist - dist;
+  float m1 = a->r * a->r;
+  float m2 = b->r * b->r;
+  float inv1 = 1.0f / m1;
+  float inv2 = 1.0f / m2;
+  float corr = overlap / (inv1 + inv2) * 0.1f;
+  a->x -= nx * corr * inv1;
+  a->y -= ny * corr * inv1;
+  b->x += nx * corr * inv2;
+  b->y += ny * corr * inv2;
+  float rvx = b->vx - a->vx;
+  float rvy = b->vy - a->vy;
   float rel = rvx * nx + rvy * ny;
-  if (rel > 0)
+  if (rel > 0.0f)
     return;
-
-  float tx = -ny;
-  float ty = nx;
-
-  float v1t = a->vx * tx + a->vy * ty;
-  float v2t = b->vx * tx + b->vy * ty;
-  float v1n = a->vx * nx + a->vy * ny;
-  float v2n = b->vx * nx + b->vy * ny;
-
-  float tmp = v1n;
-  v1n = v2n;
-  v2n = tmp;
-
-  a->vx = DAMPENING_FACTOR * (v1t * tx + v1n * nx);
-  a->vy = DAMPENING_FACTOR * (v1t * ty + v1n * ny);
-  b->vx = DAMPENING_FACTOR * (v2t * tx + v2n * nx);
-  b->vy = DAMPENING_FACTOR * (v2t * ty + v2n * ny);
+  float e = 0.8f;
+  float j = -(1.0f + e) * rel / (inv1 + inv2);
+  float jx = j * nx;
+  float jy = j * ny;
+  a->vx -= jx * inv1;
+  a->vy -= jy * inv1;
+  b->vx += jx * inv2;
+  b->vy += jy * inv2;
 }
 
 void CollideAllParticles() {
