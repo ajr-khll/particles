@@ -3,6 +3,8 @@
 This is a C + raylib particle simulation: 10,000 circles with gravity, wall
 bounces, and grid-accelerated collisions.
 
+PRESS SPACE TO SPAWN THE PARTICLES
+
 ## Highlights
 - 10,000 particles with real-time collisions via a uniform grid.
 - Simple physics: gravity, wall bounces, and elastic-ish swaps.
