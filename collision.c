@@ -46,11 +46,17 @@ void CollideParticles(Particle *a, Particle *b) {
   float nx = dx / dist;
   float ny = dy / dist;
 
+  const float PERCENT = 0.8f; // usually .2-.8
+  const float SLOP = 0.01f;   // small tolerance in pixels
+
   float overlap = (a->r + b->r) - dist;
-  a->x += nx * overlap * 0.5f;
-  a->y += ny * overlap * 0.5f;
-  b->x -= nx * overlap * 0.5f;
-  b->y -= ny * overlap * 0.5f;
+  if (overlap > SLOP) {
+    float correction = (overlap - SLOP);
+    a->x += nx * correction * PERCENT;
+    a->y += ny * correction * PERCENT;
+    b->x -= nx * correction * PERCENT;
+    b->y -= ny * correction * PERCENT;
+  }
 
   float rvx = a->vx - b->vx;
   float rvy = a->vy - b->vy;

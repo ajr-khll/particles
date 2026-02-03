@@ -26,17 +26,17 @@ void UpdateParticle(Particle *particle) {
   float r = particle->r;
   // wall collision
   if ((x + r > WIDTH)) {
-    particle->vx = -particle->vx;
+    particle->vx = -particle->vx * DAMPENING_FACTOR;
     particle->x = WIDTH - r;
   } else if ((x - r < 0)) {
-    particle->vx = -particle->vx;
+    particle->vx = -particle->vx * DAMPENING_FACTOR;
     particle->x = r;
   };
   if ((y + r > HEIGHT)) {
-    particle->vy = -particle->vy;
+    particle->vy = -particle->vy * DAMPENING_FACTOR;
     particle->y = HEIGHT - r;
   } else if ((y - r < 0)) {
-    particle->vy = -particle->vy;
+    particle->vy = -particle->vy * DAMPENING_FACTOR;
     particle->y = r;
   };
 }
