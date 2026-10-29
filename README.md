@@ -1,12 +1,12 @@
 # Particles
 
-This is a C + raylib particle simulation: 10,000 circles with gravity, wall
+This is a C + raylib particle simulation: 20,000+ circles with gravity, wall
 bounces, and grid-accelerated collisions.
 
 PRESS SPACE TO SPAWN THE PARTICLES
 
 ## Highlights
-- 10,000 particles with real-time collisions via a uniform grid.
+- 20,000+ particles at 60fps with real-time collisions via a uniform grid.
 - Simple physics: gravity, wall bounces, and elastic-ish swaps.
 - Compact C11 codebase that is easy to tune.
 
@@ -24,7 +24,7 @@ cmake --build build
 
 ## Tuning Knobs
 All the constants that matter live in `collision.h`:
-- `NUM_PARTICLES` (default 10000)
+- `NUM_PARTICLES` (default 20000)
 - `GRAVITY`
 - `DAMPENING_FACTOR`
 - `WIDTH` / `HEIGHT`

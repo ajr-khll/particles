@@ -6,7 +6,7 @@
 #define GRID_COLS 160
 #define GRID_ROWS 90
 #define CELL_SIZE 12
-#define NUM_PARTICLES 10000
+#define NUM_PARTICLES 20000
 #define DAMPENING_FACTOR 0.99
 #define GRAVITY 100.0f
 
